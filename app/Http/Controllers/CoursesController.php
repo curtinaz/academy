@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
@@ -20,5 +21,34 @@ class CoursesController extends Controller
         ]);
 
         return $course;
+    }
+
+    public function updateCourse(UpdateCourseRequest $req) {
+
+        $course = Course::find($req->course_id);
+        if(!$course) {
+            return response(["Course not found"], 404);
+        }
+
+        $req->name ? $course->name = $req->name : null;
+        $req->description ? $course->description = $req->description : null;
+
+        $course->save();
+
+        return $course;
+    }
+
+    public function deleteCourse(Request $req) {
+
+        $course = Course::find($req->course_id);
+        if(!$course) {
+            return response(["Course not found"], 404);
+        }
+
+        $course->delete();
+
+        return response([
+            "Course deleted"
+        ], 200);
     }
 }
