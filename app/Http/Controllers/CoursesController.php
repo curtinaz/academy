@@ -9,6 +9,18 @@ use Illuminate\Http\Request;
 
 class CoursesController extends Controller
 {
+
+    public function show(Request $req) {
+        $course = Course::where('id', $req->course_id)->with('modules')->first();
+        if(!$course) {
+            return response([
+                "Course not found"
+            ], 404);
+        }
+
+        return $course;
+    }
+
     public function getCourses() {
         $courses = Course::all();
         return $courses;
